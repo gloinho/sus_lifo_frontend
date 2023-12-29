@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sus_lifo_frontend/get_patients.dart';
+import 'package:provider/provider.dart';
+import 'package:sus_lifo_frontend/models/patient_list_viewmodel.dart';
+import 'package:sus_lifo_frontend/models/patient_viewmodel.dart';
 
-class AddPatientForm extends StatelessWidget {
-  const AddPatientForm({super.key});
+class PatientForm extends StatelessWidget {
+  const PatientForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,15 +13,6 @@ class AddPatientForm extends StatelessWidget {
         title: const Center(child: Text('Adicionar Pacientes')),
       ),
       body: const AddPatient(),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: ElevatedButton(
-      //   onPressed: () {
-      //     Navigator.pushNamed(context, '/');
-      //   },
-      //   child: const Text(
-      //     'Ver Fila Atual',
-      //   ),
-      // ),
     );
   }
 }
@@ -34,8 +27,10 @@ class AddPatient extends StatefulWidget {
 class _AddPatientState extends State<AddPatient> {
   final TextEditingController _textFieldController = TextEditingController();
 
-  Future<void> _insertPatient() async {
-    Patient? patient = await insertPatient(_textFieldController.text);
+  Future<void> _insertPatient(BuildContext context) async {
+    PatientViewModel? patient = await context
+        .read<PatientListViewModel>()
+        .add(_textFieldController.text);
 
     if (patient != null) {
       _showSuccessDialog(patient);
@@ -45,7 +40,7 @@ class _AddPatientState extends State<AddPatient> {
     }
   }
 
-  void _showSuccessDialog(Patient patient) {
+  void _showSuccessDialog(PatientViewModel patient) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -86,7 +81,7 @@ class _AddPatientState extends State<AddPatient> {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () async {
-              await _insertPatient();
+              await _insertPatient(context);
             },
             child: const Text('Entrar na fila'),
           ),
