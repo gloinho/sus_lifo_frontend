@@ -27,10 +27,24 @@ class AddPatient extends StatefulWidget {
 class _AddPatientState extends State<AddPatient> {
   final TextEditingController _textFieldController = TextEditingController();
 
+  String errorMessage = '';
+
   Future<void> _insertPatient(BuildContext context) async {
-    PatientViewModel? patient = await context
-        .read<PatientListViewModel>()
-        .add(_textFieldController.text);
+    String patientName = _textFieldController.text.trim();
+
+    if (patientName.isEmpty) {
+      setState(() {
+        errorMessage = 'O nome do paciente não pode estar vazio.';
+      });
+      return;
+    }
+
+    setState(() {
+      errorMessage = '';
+    });
+
+    PatientViewModel? patient =
+        await context.read<PatientListViewModel>().add(patientName);
 
     if (patient != null) {
       _showSuccessDialog(patient);
@@ -70,11 +84,20 @@ class _AddPatientState extends State<AddPatient> {
           Center(
             child: SizedBox(
               width: 500,
-              child: TextField(
-                controller: _textFieldController,
-                decoration: const InputDecoration(
-                  labelText: 'Insira o nome do paciente.',
-                ),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _textFieldController,
+                    decoration: InputDecoration(
+                        labelText: 'Insira o nome do paciente.',
+                        errorText:
+                            errorMessage.isNotEmpty ? errorMessage : null,
+                        errorStyle: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                ],
               ),
             ),
           ),
