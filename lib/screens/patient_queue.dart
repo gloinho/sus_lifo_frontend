@@ -25,23 +25,15 @@ class _PatientQueueState extends State<PatientQueue> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           'Fila de Pacientes - SUS LIFO',
-          style: Theme.of(context).textTheme.displaySmall,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         shadowColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
-        height: MediaQuery.of(context).size.height * 0.85,
+        height: MediaQuery.of(context).size.height * 0.82,
         child: Column(
           children: [
-            const Stack(
-              children: [
-                ListTile(
-                  leading: Text('Data de Entrada'),
-                  title: Text('Nome', textAlign: TextAlign.justify),
-                ),
-              ],
-            ),
             Expanded(child: _buildPatientList()),
           ],
         ),
@@ -87,18 +79,20 @@ class _PatientQueueState extends State<PatientQueue> {
       separatorBuilder: (context, index) => const SizedBox(
         height: 10,
       ),
-      //shrinkWrap: true,
       itemCount: patients.length,
       scrollDirection: Axis.vertical,
       itemBuilder: (BuildContext context, int index) {
         return Card(
           child: ListTile(
-            leading: Text(DateFormat('dd-MM-yyy')
-                .add_Hms()
-                .format(patients[index].createdAt)),
+            leading: const CircleAvatar(
+              radius: 30, // ajuste conforme necessário
+              backgroundImage: AssetImage('assets/patient_img.png'),
+            ),
+            subtitle: Text(
+                'Data de Entrada: ${DateFormat('dd-MM-yyy').add_Hms().format(patients[index].createdAt)}'),
             title: Text(
-              textAlign: TextAlign.justify,
               Utils.capitalizeFirstLetter(patients[index].name),
+              textAlign: TextAlign.justify,
             ),
           ),
         );

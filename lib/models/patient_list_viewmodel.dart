@@ -8,8 +8,7 @@ class PatientListViewModel extends ChangeNotifier {
 
   Future<void> fetchPatients() async {
     final patients = await PatientService.fetchPatient();
-    _patients = patients.where((element) => !element.assisted).toList();
-    _patients.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    _patients = patients;
     notifyListeners();
   }
 
@@ -21,20 +20,20 @@ class PatientListViewModel extends ChangeNotifier {
   Future<PatientViewModel?> add(String name) async {
     final patient = await PatientService.insertPatient(name);
     if (patient != null) {
-      _patients.add(patient);
-      _patients.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      notifyListeners();
+      await fetchPatients();
       return patient;
     }
     return null;
   }
 
-  void remove() async {
+  Future<PatientViewModel?> remove() async {
     final patient = await PatientService.assistPatient();
 
     if (patient != null) {
       _patients.removeWhere((item) => item.id == patient.id);
       notifyListeners();
+      return patient;
     }
+    return null;
   }
 }

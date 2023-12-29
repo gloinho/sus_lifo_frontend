@@ -4,8 +4,8 @@ import 'package:sus_lifo_frontend/models/patient_viewmodel.dart'; // Adicione a 
 class PatientService {
   static Future<List<PatientViewModel>> fetchPatient() async {
     try {
-      final response =
-          await Dio().get('http://127.0.0.1:5000/api/v1/patients/');
+      final response = await Dio()
+          .get('http://127.0.0.1:5000/api/v1/patients/?assisted=false');
 
       if (response.statusCode == 200) {
         List<PatientViewModel> patientsList = (response.data as List)
