@@ -1,5 +1,7 @@
 import 'dart:collection';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:sus_lifo_frontend/models/error_viewmodel.dart';
 import 'package:sus_lifo_frontend/services/patients_service.dart';
 import 'package:sus_lifo_frontend/models/patient_viewmodel.dart';
 
@@ -17,13 +19,17 @@ class PatientListViewModel extends ChangeNotifier {
 
   List<PatientViewModel> get() => _patients;
 
-  Future<PatientViewModel?> add(String name) async {
-    final patient = await PatientService.insertPatient(name);
-    if (patient != null) {
+  Future<dynamic> add(String name) async {
+    try {
+      final patient = await PatientService.insertPatient(name);
       await fetchPatients();
       return patient;
+    } catch (e) {
+      if (e is DioError) {
+        final dioError = e;
+        return ErrorViewModel(message: dioError.response?.data["message"]);
+      }
     }
-    return null;
   }
 
   Future<PatientViewModel?> remove() async {

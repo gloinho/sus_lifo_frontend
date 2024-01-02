@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sus_lifo_frontend/models/error_viewmodel.dart';
 import 'package:sus_lifo_frontend/models/patient_list_viewmodel.dart';
 import 'package:sus_lifo_frontend/models/patient_viewmodel.dart';
 
@@ -43,13 +44,16 @@ class _AddPatientState extends State<AddPatient> {
       errorMessage = '';
     });
 
-    PatientViewModel? patient =
-        await context.read<PatientListViewModel>().add(patientName);
+    var patient = await context.read<PatientListViewModel>().add(patientName);
 
-    if (patient != null) {
+    if (patient != null && patient is PatientViewModel) {
       _showSuccessDialog(patient);
       setState(() {
         _textFieldController.text = '';
+      });
+    } else if (patient is ErrorViewModel) {
+      setState(() {
+        errorMessage = patient.message;
       });
     }
   }
