@@ -1,16 +1,29 @@
-# sus_lifo_frontend
+# SUS-LIFO-FRONTEND
 
-A new Flutter project.
+> Processo Seletivo DOX - Teste técnico (SUS-LIFO)
 
-## Getting Started
+O gerente (da UPA) ficou maluco! Precisamos de um sistema para gerenciar a fila de pacientes que não param de chegar e a regra é: o último a chegar é o primeiro a ser atendido.
+Você deverá implementar um mini-sistema web com as seguintes caracteristicas:
 
-This project is a starting point for a Flutter application.
+- Front web em Flutter
+- **Duas telas: a inicial mostrará o último paciente que chegou na fila, a alternativa deverá permitir ao usuário de registrar um novo paciente. O input do usuário nesse caso é somente seu nome**
+- Backend em python usando o framework flask.
+- Os dados deverão ser persistidos em um banco de dados MySQL.
+- Tecnologia recomendada: sqlalchemy
+- **Entregável: arquivo zip com o código para o front e o back com instruções de como rodar o código.**
+- Será analisado sobretudo a organização do código
 
-A few resources to get you started if this is your first Flutter project:
+## Pre-requisitos
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Flutter](https://docs.flutter.dev/get-started/install) (Channel stable, 3.16)
+- Dart (3.2.3)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Como usar
+
+1. Clone o repositório ou baixe o arquivo zipado.
+2. Incialize o [Backend](https://github.com/gloinho/sus-lifo-backend) para funcionalidade completa.
+3. Inicialize o projeto
+
+```bash
+flutter run -d chrome
+```

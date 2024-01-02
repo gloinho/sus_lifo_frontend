@@ -1,6 +1,6 @@
 {
-    "name": "sus_lifo_frontend",
-    "short_name": "sus_lifo_frontend",
+    "name": "sus_lifo",
+    "short_name": "sus_lifo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

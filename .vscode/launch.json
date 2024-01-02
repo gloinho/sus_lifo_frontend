@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "sus_lifo_frontend",
+      "name": "sus_lifo",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "sus_lifo_frontend (profile mode)",
+      "name": "sus_lifo (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "sus_lifo_frontend (release mode)",
+      "name": "sus_lifo (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

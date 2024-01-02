@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sus_lifo_frontend/models/error_viewmodel.dart';
-import 'package:sus_lifo_frontend/models/patient_list_viewmodel.dart';
-import 'package:sus_lifo_frontend/models/patient_viewmodel.dart';
+import 'package:sus_lifo/models/error_viewmodel.dart';
+import 'package:sus_lifo/models/patient_list_viewmodel.dart';
+import 'package:sus_lifo/models/patient_viewmodel.dart';
+import 'package:sus_lifo/utils.dart';
 
 class PatientForm extends StatelessWidget {
   const PatientForm({super.key});
@@ -59,23 +60,8 @@ class _AddPatientState extends State<AddPatient> {
   }
 
   void _showSuccessDialog(PatientViewModel patient) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Paciente Adicionado com Sucesso'),
-          content: Text('ID do Paciente: ${patient.id}\nNome: ${patient.name}'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+    Utils.showSuccessDialog(
+        patient, context, "Paciente Adicionado com Sucesso");
   }
 
   @override

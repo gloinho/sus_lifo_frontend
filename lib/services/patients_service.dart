@@ -1,23 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:sus_lifo_frontend/models/patient_viewmodel.dart'; // Adicione a dependência dio no seu pubspec.yaml
+import 'package:sus_lifo/models/patient_viewmodel.dart'; // Adicione a dependência dio no seu pubspec.yaml
 
 class PatientService {
   static Future<List<PatientViewModel>> fetchPatient() async {
-    final response = await Dio()
-        .get('http://127.0.0.1:5000/api/v1/patients/?assisted=false');
+    try {
+      final response = await Dio()
+          .get('http://127.0.0.1:5000/api/v1/patients/?assisted=false');
 
-    if (response.statusCode == 200) {
       List<PatientViewModel> patientsList = (response.data as List)
           .map((patient) =>
               PatientViewModel.fromJson(patient as Map<String, dynamic>))
           .toList();
 
       return patientsList;
-    } else {
-      throw DioError(
-        requestOptions: response.requestOptions,
-        response: response,
-      );
+    } on DioError {
+      rethrow;
     }
   }
 
@@ -47,6 +44,7 @@ class PatientService {
       var assisted = response.data;
       return PatientViewModel.fromJson(assisted);
     } else {
+      print(response);
       throw DioError(
         requestOptions: response.requestOptions,
         response: response,

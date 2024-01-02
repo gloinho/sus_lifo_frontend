@@ -1,4 +1,4 @@
-package com.example.sus_lifo_frontend
+package com.example.sus_lifo
 
 import io.flutter.embedding.android.FlutterActivity
 

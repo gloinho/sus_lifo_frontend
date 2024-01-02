@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:sus_lifo_frontend/utils.dart';
-import 'package:sus_lifo_frontend/models/patient_list_viewmodel.dart';
+import 'package:sus_lifo/models/error_viewmodel.dart';
+import 'package:sus_lifo/utils.dart';
+import 'package:sus_lifo/models/patient_list_viewmodel.dart';
 
 class PatientQueue extends StatefulWidget {
   const PatientQueue({super.key});
@@ -39,11 +39,26 @@ class _PatientQueueState extends State<PatientQueue> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _buildActionButtons(),
+      floatingActionButton: _buildActionButtons(context),
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
+    void showDialogs(result) {
+      if (result is ErrorViewModel) {
+        Utils.showErrorDialog(
+            result, context, "Não foi possível atender o paciente");
+      } else {
+        Utils.showSuccessDialog(
+            result, context, "Paciente atendido com sucesso");
+      }
+    }
+
+    void assistPatient() async {
+      var result = await context.read<PatientListViewModel>().remove();
+      showDialogs(result);
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -61,7 +76,7 @@ class _PatientQueueState extends State<PatientQueue> {
           ),
           const SizedBox(width: 10),
           ElevatedButton(
-            onPressed: () => context.read<PatientListViewModel>().remove(),
+            onPressed: () => assistPatient(),
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(100, 100),
             ),
@@ -74,6 +89,10 @@ class _PatientQueueState extends State<PatientQueue> {
 
   Widget _buildPatientList() {
     final patients = Provider.of<PatientListViewModel>(context).patients;
+
+    if (patients.isEmpty) {
+      return const Center(child: Text('Nenhum paciente cadastrado'));
+    }
 
     return ListView.separated(
       separatorBuilder: (context, index) => const SizedBox(
@@ -89,7 +108,7 @@ class _PatientQueueState extends State<PatientQueue> {
               backgroundImage: AssetImage('assets/patient_img.png'),
             ),
             subtitle: Text(
-                'Data de Entrada: ${DateFormat('dd-MM-yyy').add_Hms().format(patients[index].createdAt)}'),
+                Utils.formatDate(patients[index].createdAt, TipoData.entrada)),
             title: Text(
               Utils.capitalizeFirstLetter(patients[index].name),
               textAlign: TextAlign.justify,

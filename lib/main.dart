@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sus_lifo_frontend/screens/patient_form.dart';
-import 'package:sus_lifo_frontend/screens/patient_queue.dart';
-import 'package:sus_lifo_frontend/styles/color_schemes.g.dart';
-import 'package:sus_lifo_frontend/styles/custom_color.g.dart';
-import 'package:sus_lifo_frontend/styles/typography.dart';
-import 'package:sus_lifo_frontend/models/patient_list_viewmodel.dart';
+import 'package:sus_lifo/screens/patient_form.dart';
+import 'package:sus_lifo/screens/patient_queue.dart';
+import 'package:sus_lifo/styles/color_schemes.g.dart';
+import 'package:sus_lifo/styles/custom_color.g.dart';
+import 'package:sus_lifo/styles/typography.dart';
+import 'package:sus_lifo/models/patient_list_viewmodel.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'SUS LIFO',
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: lightColorScheme,
