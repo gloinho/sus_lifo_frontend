@@ -23,8 +23,8 @@ class Utils {
     return text[0].toUpperCase() + text.substring(1);
   }
 
-  static void showSuccessDialog(
-      PatientViewModel patient, BuildContext context, String customMessage) {
+  static void showSuccessDialog(PatientViewModel patient, BuildContext context,
+      String customMessage, Function okOnPressed) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -34,9 +34,7 @@ class Utils {
               'ID do Paciente: ${patient.id}\nNome: ${patient.name}\n${formatDate(patient.createdAt, TipoData.entrada)}\n${formatDate(patient.updatedAt, TipoData.saida)}'),
           actions: <Widget>[
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => {okOnPressed()},
               child: const Text('OK'),
             ),
           ],
@@ -63,6 +61,19 @@ class Utils {
           ],
         );
       },
+    );
+  }
+
+  static ElevatedButton baseElevatedButton(Function onPressed, String innerText,
+      {bool isLoading = false}) {
+    return ElevatedButton(
+      onPressed: () => {onPressed()},
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(100, 100),
+      ),
+      child: isLoading
+          ? const CircularProgressIndicator() // Mostra o indicador de carregamento se estiver carregando
+          : Text(innerText),
     );
   }
 }

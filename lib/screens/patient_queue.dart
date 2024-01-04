@@ -12,6 +12,7 @@ class PatientQueue extends StatefulWidget {
 }
 
 class _PatientQueueState extends State<PatientQueue> {
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -22,6 +23,7 @@ class _PatientQueueState extends State<PatientQueue> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           'Fila de Pacientes - SUS LIFO',
@@ -49,14 +51,26 @@ class _PatientQueueState extends State<PatientQueue> {
         Utils.showErrorDialog(
             result, context, "Não foi possível atender o paciente");
       } else {
-        Utils.showSuccessDialog(
-            result, context, "Paciente atendido com sucesso");
+        Utils.showSuccessDialog(result, context,
+            "Paciente atendido com sucesso", () => {Navigator.pop(context)});
       }
     }
 
     void assistPatient() async {
-      var result = await context.read<PatientListViewModel>().remove();
-      showDialogs(result);
+      if (_isLoading) {
+        return;
+      }
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        var result = await context.read<PatientListViewModel>().remove();
+        showDialogs(result);
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
 
     return Container(
@@ -65,23 +79,13 @@ class _PatientQueueState extends State<PatientQueue> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/patient');
-            },
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(100, 100),
-            ),
-            child: const Text('Adicionar Paciente'),
+          Utils.baseElevatedButton(
+            () => {Navigator.pushNamed(context, '/patient')},
+            'Adicionar Paciente',
           ),
           const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () => assistPatient(),
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(100, 100),
-            ),
-            child: const Text('Atender Paciente'),
-          ),
+          Utils.baseElevatedButton(assistPatient, 'Atender Paciente',
+              isLoading: _isLoading)
         ],
       ),
     );

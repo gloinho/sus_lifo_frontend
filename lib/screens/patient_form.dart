@@ -27,45 +27,53 @@ class AddPatient extends StatefulWidget {
 }
 
 class _AddPatientState extends State<AddPatient> {
+  bool _isLoading = false;
   final TextEditingController _textFieldController = TextEditingController();
-
   String errorMessage = '';
-
-  Future<void> _insertPatient(BuildContext context) async {
-    String patientName = _textFieldController.text.trim();
-
-    if (patientName.isEmpty) {
-      setState(() {
-        errorMessage = 'O nome do paciente não pode estar vazio.';
-      });
-      return;
-    }
-
-    setState(() {
-      errorMessage = '';
-    });
-
-    var patient = await context.read<PatientListViewModel>().add(patientName);
-
-    if (patient != null && patient is PatientViewModel) {
-      _showSuccessDialog(patient);
-      setState(() {
-        _textFieldController.text = '';
-      });
-    } else if (patient is ErrorViewModel) {
-      setState(() {
-        errorMessage = patient.message;
-      });
-    }
-  }
-
-  void _showSuccessDialog(PatientViewModel patient) {
-    Utils.showSuccessDialog(
-        patient, context, "Paciente Adicionado com Sucesso");
-  }
 
   @override
   Widget build(BuildContext context) {
+    void showSuccessDialog(PatientViewModel patient) {
+      Utils.showSuccessDialog(
+          patient,
+          context,
+          "Paciente Adicionado com Sucesso",
+          () => {Navigator.pushReplacementNamed(context, '/')});
+    }
+
+    Future<void> insertPatient() async {
+      String patientName = _textFieldController.text.trim();
+
+      if (_isLoading) {
+        return;
+      }
+
+      setState(() {
+        errorMessage = '';
+        _isLoading = true;
+      });
+
+      try {
+        var result =
+            await context.read<PatientListViewModel>().add(patientName);
+
+        if (result is PatientViewModel) {
+          showSuccessDialog(result);
+          setState(() {
+            _textFieldController.text = '';
+          });
+        } else if (result is ErrorViewModel) {
+          setState(() {
+            errorMessage = result.message;
+          });
+        }
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -92,12 +100,11 @@ class _AddPatientState extends State<AddPatient> {
             ),
           ),
           const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () async {
-              await _insertPatient(context);
-            },
-            child: const Text('Entrar na fila'),
-          ),
+          Utils.baseElevatedButton(
+            insertPatient,
+            'Entrar na Fila',
+            isLoading: _isLoading,
+          )
         ],
       ),
     );
