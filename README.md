@@ -15,7 +15,7 @@ Você deverá implementar um mini-sistema web com as seguintes caracteristicas:
 
 ## Pre-requisitos
 
-- [Flutter](https://docs.flutter.dev/get-started/install/windows/web?tab=vscode) (Channel stable, 3.16)
+- [Flutter](https://docs.flutter.dev/get-started/install/windows/web?tab=vscode) (Channel stable, 3.16.5)
   - Coloque o Flutter nas variáveis de ambiente para o [Flutter CLI](https://docs.flutter.dev/reference/flutter-cli) funcionar.
     - `/caminho/para/flutter/bin`
 
